@@ -2,14 +2,15 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
     if (!session?.user) return NextResponse.json({ error: "Brak uprawnień" }, { status: 401 });
 
     try {
+        const { id } = await params;
         const { status } = await req.json();
         const updated = await prisma.contactMessage.update({
-            where: { id: params.id },
+            where: { id },
             data: { status }
         });
         return NextResponse.json(updated);
@@ -18,13 +19,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
     if (!session?.user) return NextResponse.json({ error: "Brak uprawnień" }, { status: 401 });
 
     try {
+        const { id } = await params;
         await prisma.contactMessage.delete({
-            where: { id: params.id }
+            where: { id }
         });
         return NextResponse.json({ success: true });
     } catch (e) {
