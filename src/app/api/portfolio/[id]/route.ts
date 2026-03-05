@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 type Params = { params: Promise<{ id: string }> };
 
 // PATCH: aktualizuj realizację
-export async function PATCH(req: Request, { params }: Params) {
+export async function PATCH(req: NextRequest, { params }: Params) {
     const { id } = await params;
     const body = await req.json();
 
@@ -25,7 +25,7 @@ export async function PATCH(req: Request, { params }: Params) {
 }
 
 // DELETE: usuń realizację
-export async function DELETE(_req: Request, { params }: Params) {
+export async function DELETE(_req: NextRequest, { params }: Params) {
     const { id } = await params;
     await prisma.portfolioItem.delete({ where: { id } });
     return NextResponse.json({ success: true });

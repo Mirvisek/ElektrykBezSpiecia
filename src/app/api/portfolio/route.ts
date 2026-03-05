@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 // GET: lista realizacji
@@ -10,7 +10,7 @@ export async function GET() {
 }
 
 // POST: utwórz realizację
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { title, description, category, imageUrl, images, order } = body;

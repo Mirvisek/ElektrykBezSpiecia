@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendEmail, contactNotificationHtml } from "@/lib/email";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { name, phone, email, message } = body;
