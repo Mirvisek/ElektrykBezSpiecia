@@ -6,6 +6,7 @@ import { prisma } from "../lib/prisma";
 import CookieBanner from "@/components/CookieBanner";
 import WcagWidget from "@/components/WcagWidget";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -138,6 +139,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster position="top-center" />
         {children}
         <WcagWidget />
         <WhatsAppWidget phone={settings?.contactPhone || ""} />

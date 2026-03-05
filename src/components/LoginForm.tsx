@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Zap, Loader2, ArrowRight } from "lucide-react";
+import toast from "react-hot-toast";
 
 export function LoginForm() {
     const [email, setEmail] = useState("");
@@ -29,10 +30,12 @@ export function LoginForm() {
 
             if (res?.error) {
                 console.error("Logowanie nieudane:", res.error);
+                toast.error("Nieprawidłowy adres email lub hasło.");
                 setError("Nieprawidłowy adres email lub hasło.");
                 setLoading(false);
             } else {
                 console.log("Logowanie zakończone sukcesem!");
+                toast.success("Zalogowano pomyślnie!");
                 setSuccess(true);
                 setTimeout(() => {
                     router.push("/adminpanel");
@@ -41,6 +44,7 @@ export function LoginForm() {
             }
         } catch (err) {
             console.error("Nieoczekiwany błąd logowania:", err);
+            toast.error("Wystąpił nieoczekiwany błąd. Spróbuj ponownie.");
             setError("Wystąpił nieoczekiwany błąd. Spróbuj ponownie.");
             setLoading(false);
         }
