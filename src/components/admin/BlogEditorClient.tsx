@@ -11,7 +11,7 @@ interface BlogEditorProps {
         title: string;
         slug: string;
         content: string;
-        excerpt: string;
+        excerpt: string | null;
         imageUrl: string | null;
         isPublished: boolean;
     };
