@@ -5,6 +5,7 @@ import { ArrowLeft, Save, Plus, Trash2, LayoutTemplate, Settings, Zap, ShieldChe
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { updateSiteSettings, addHeroSlide, deleteHeroSlide, addAdvantage, deleteAdvantage, addService, deleteService } from "@/app/adminpanel/actions";
+import toast from "react-hot-toast";
 
 export default function SeoEditorClient({ initialSettings, initialHeroSlides, initialAdvantages, initialServices }: any) {
     const router = useRouter();
@@ -36,28 +37,39 @@ export default function SeoEditorClient({ initialSettings, initialHeroSlides, in
     const handleSaveSettings = async (e: any) => {
         e.preventDefault();
         setLoading(true);
-        await updateSiteSettings(settings);
+        try {
+            await updateSiteSettings(settings);
+            toast.success("Ustawienia główne zostały zapisane!");
+            router.refresh();
+        } catch (err) {
+            toast.error("Wystąpił błąd podczas zapisywania.");
+        }
         setLoading(false);
-        alert("Ustawienia globalne zapisane!");
-        router.refresh();
     };
 
     const handleAddSectionObj = async (setter: any, addAction: any, data: any, typeName: string) => {
         setLoading(true);
-        await addAction(data);
-        alert(`Dodano do sekcji: ${typeName}`);
+        try {
+            await addAction(data);
+            toast.success(`Dodano: ${typeName}`);
+            router.refresh();
+        } catch (err) {
+            toast.error("Nie udało się dodać elementu.");
+        }
         setLoading(false);
-        router.refresh();
-        window.location.reload(); // Prosty sposób na pewny re-fetch po mutacji dla listy
     };
 
     const handleDeleteSectionObj = async (setter: any, deleteAction: any, id: string, name: string) => {
         if (!confirm(`Na pewno chcesz usunąć: ${name}?`)) return;
         setLoading(true);
-        await deleteAction(id);
+        try {
+            await deleteAction(id);
+            toast.success("Usunięto pomyślnie.");
+            router.refresh();
+        } catch (err) {
+            toast.error("Błąd podczas usuwania.");
+        }
         setLoading(false);
-        router.refresh();
-        window.location.reload();
     };
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
@@ -77,11 +89,12 @@ export default function SeoEditorClient({ initialSettings, initialHeroSlides, in
             const data = await res.json();
             if (data.success) {
                 setSettings({ ...settings, [fieldName]: data.url });
+                toast.success("Plik wgrany pomyślnie.");
             } else {
-                alert("Błąd podczas wgrywania pliku.");
+                toast.error("Błąd podczas wgrywania pliku.");
             }
         } catch (err) {
-            alert("Brak połączenia z serwerem.");
+            toast.error("Brak połączenia z serwerem.");
         }
         setLoading(false);
     };
@@ -98,8 +111,9 @@ export default function SeoEditorClient({ initialSettings, initialHeroSlides, in
                 body: JSON.stringify({ fileUrl })
             });
             setSettings({ ...settings, [fieldName]: "" });
+            toast.success("Plik usunięty.");
         } catch (e) {
-            alert("Błąd podczas usuwania pliku.");
+            toast.error("Błąd podczas usuwania pliku.");
         }
         setLoading(false);
     };
@@ -305,7 +319,7 @@ export default function SeoEditorClient({ initialSettings, initialHeroSlides, in
                                             <input name="btnLink" placeholder="Link, np. /kontakt" className="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#061125] dark:text-white outline-none" />
                                         </div>
                                         <button type="submit" disabled={loading} style={{ padding: "10px 36px" }} className="bg-brand-orange hover:bg-brand-orange/80 text-white rounded-xl text-base font-bold transition-all flex items-center justify-center gap-3 whitespace-nowrap w-full sm:w-auto shadow-sm">
-                                            <Save className="w-5 h-5" /> {loading ? "..." : "Zapisz slajd"}
+                                            <Save className="w-5 h-5" /> {loading ? "Dodawanie..." : "Zapisz slajd"}
                                         </button>
                                     </form>
 
@@ -342,7 +356,7 @@ export default function SeoEditorClient({ initialSettings, initialHeroSlides, in
                                             <textarea name="desc" required rows={2} placeholder="Krótki tekst argumentujący" className="md:col-span-2 w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#061125] dark:text-white outline-none"></textarea>
                                         </div>
                                         <button type="submit" disabled={loading} style={{ padding: "10px 36px" }} className="bg-brand-orange hover:bg-brand-orange/80 text-white rounded-xl text-base font-bold transition-all flex items-center justify-center gap-3 whitespace-nowrap w-full sm:w-auto shadow-sm">
-                                            <Save className="w-5 h-5" /> {loading ? "..." : "Zapisz blok"}
+                                            <Save className="w-5 h-5" /> {loading ? "Dodawanie..." : "Zapisz blok"}
                                         </button>
                                     </form>
 
@@ -377,7 +391,7 @@ export default function SeoEditorClient({ initialSettings, initialHeroSlides, in
                                             <textarea name="desc" required rows={2} placeholder="Krótki tekst usługi..." className="md:col-span-2 w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#061125] dark:text-white outline-none"></textarea>
                                         </div>
                                         <button type="submit" disabled={loading} style={{ padding: "10px 36px" }} className="bg-brand-orange hover:bg-brand-orange/80 text-white rounded-xl text-base font-bold transition-all flex items-center justify-center gap-3 whitespace-nowrap w-full sm:w-auto shadow-sm">
-                                            <Save className="w-5 h-5" /> {loading ? "..." : "Zapisz usługę"}
+                                            <Save className="w-5 h-5" /> {loading ? "Dodawanie..." : "Zapisz usługę"}
                                         </button>
                                     </form>
 
