@@ -160,9 +160,13 @@ export async function deleteTestimonial(id: string) {
 
 // === SITE SETTINGS ===
 export async function updateSiteSettings(data: any) {
-    await prisma.siteSetting.update({
+    await prisma.siteSetting.upsert({
         where: { id: "global" },
-        data
+        update: data,
+        create: {
+            id: "global",
+            ...data
+        }
     });
     revalidatePath("/adminpanel/seo");
     revalidatePath("/");
