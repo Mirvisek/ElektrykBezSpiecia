@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String?   @unique
+  password           String?
+  role               String    @default("ADMIN")
+  mustChangePassword Boolean   @default(false)
+  resetToken         String?
+  resetTokenExpiry   DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+// Globalne ustawienia strony - SEO, teksty, loga
+model SiteSetting {
+  id            String   @id @default("global")
+  title         String   @default("Elektryk Bez Spięcia")
+  description   String   @default("Profesjonalne usługi elektryczne, montaż i pomiary. Solidnie i bezpiecznie.")
+  keywords      String   @default("elektryk, usługi elektryczne, pomiary, instalacje")
+  logoUrl       String?  
+  contactMail   String   @default("kontakt@elektrykbezspiecia.pl")
+  contactPhone  String   @default("+48 123 456 789")
+  address       String   @default("Kraków i okolice")
+  companyName   String?
+  companyNip    String?
+  facebookUrl   String?
+  instagramUrl  String?
+  whatsappNumber String?
+  trackingScript String?
+  googleAnalyticsId String?
+  metaPixelId    String?
+  ogTitle       String?
+  ogDescription String?
+  ogImageUrl    String?
+  iconUrl       String?
+  workingHours  String   @default("Poniedziałek - Piątek: 8:00 - 18:00\nSobota: Na wezwanie")
+  topBannerText String?
+  topBannerActive Boolean @default(false)
+  footerText    String   @default("© 2026 Elektryk Bez Spięcia. Wszelkie prawa zastrzeżone.")
+  // Mailing
+  emailProvider    String  @default("smtp") // "smtp" lub "resend"
+  smtpHost         String?
+  smtpPort         Int     @default(587)
+  smtpUser         String?
+  smtpPass         String?
+  smtpFrom         String?
+  resendApiKey     String?
+  notificationEmail String? // Gdzie wysyłać powiadomienia o zgłoszeniach
+  blogActive       Boolean @default(true)
+  portfolioActive  Boolean @default(true)
+  updatedAt     DateTime @updatedAt
+}
+
+model HeroSlide {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  buttonText  String   @default("Sprawdź ofertę")
+  buttonLink  String   @default("#uslugi")
+  imageUrl    String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+}
+
+model Advantage {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  icon        String   @default("Zap") // Nazwa ikony z lucide-react
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  icon        String   @default("Wrench")
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  authorName  String
+  content     String
+  rating      Int      @default(5)
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  message   String
+  status    String   @default("NEW")
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String?
+  content     String
+  imageUrl    String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model PortfolioItem {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String?  // np. "Instalacje", "Pomiary", "Montaż", "Awarie"
+  imageUrl    String?  // Główne zdjęcie
+  images      String?  // JSON array dodatkowych zdjęć: ["url1","url2",...]
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
