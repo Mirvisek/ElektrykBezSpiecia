@@ -9,6 +9,7 @@ export function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
@@ -16,6 +17,7 @@ export function LoginForm() {
         e.preventDefault();
         setLoading(true);
         setError("");
+        setSuccess(false);
 
         try {
             console.log(`Próba logowania dla: ${email}...`);
@@ -31,8 +33,11 @@ export function LoginForm() {
                 setLoading(false);
             } else {
                 console.log("Logowanie zakończone sukcesem!");
-                router.push("/adminpanel");
-                router.refresh();
+                setSuccess(true);
+                setTimeout(() => {
+                    router.push("/adminpanel");
+                    router.refresh();
+                }, 1000);
             }
         } catch (err) {
             console.error("Nieoczekiwany błąd logowania:", err);
@@ -73,8 +78,14 @@ export function LoginForm() {
             </div>
 
             {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg animate-in fade-in zoom-in duration-300">
                     <p className="text-sm text-red-400 text-center font-medium">{error}</p>
+                </div>
+            )}
+
+            {success && (
+                <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg animate-in fade-in zoom-in duration-300">
+                    <p className="text-sm text-green-400 text-center font-medium">Logowanie pomyślne! Zaraz zostaniesz przekierowany...</p>
                 </div>
             )}
 
