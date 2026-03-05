@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+export const dynamic = 'force-dynamic';
+
 import { prisma } from "../lib/prisma";
 import CookieBanner from "@/components/CookieBanner";
 import WcagWidget from "@/components/WcagWidget";
