@@ -18,6 +18,7 @@ export function LoginForm() {
         setError("");
 
         try {
+            console.log(`Próba logowania dla: ${email}...`);
             const res = await signIn("credentials", {
                 redirect: false,
                 email,
@@ -25,13 +26,16 @@ export function LoginForm() {
             });
 
             if (res?.error) {
+                console.error("Logowanie nieudane:", res.error);
                 setError("Nieprawidłowy adres email lub hasło.");
                 setLoading(false);
             } else {
+                console.log("Logowanie zakończone sukcesem!");
                 router.push("/adminpanel");
                 router.refresh();
             }
         } catch (err) {
+            console.error("Nieoczekiwany błąd logowania:", err);
             setError("Wystąpił nieoczekiwany błąd. Spróbuj ponownie.");
             setLoading(false);
         }

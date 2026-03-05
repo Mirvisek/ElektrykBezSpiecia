@@ -26,6 +26,7 @@ async function resetAdmin() {
     console.log('\n=========================================');
     console.log('   RESTART KONTA ADMINISTRATORA');
     console.log('=========================================');
+    console.log('Status: Sukces! Dane zapisane w bazie.');
     console.log(`Login: ${email}`);
     console.log(`Hasło: ${password}`);
     console.log('=========================================');
