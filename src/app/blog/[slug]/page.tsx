@@ -57,7 +57,7 @@ export default async function BlogPostPage({ params }: Props) {
                         <Link href="/#dlaczego-my" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Dlaczego My</Link>
                         <Link href="/#uslugi" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Usługi</Link>
                         {(settings?.portfolioActive !== false) && <Link href="/realizacje" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Realizacje</Link>}
-                        {(settings?.blogActive !== false) && <Link href="/blog" className="text-sm font-medium text-brand-orange border-b-2 border-brand-orange pb-0.5">Blog</Link>}
+                        <Link href="/blog" className="text-sm font-medium text-brand-orange border-b-2 border-brand-orange pb-0.5">Blog</Link>
                         <Link href="/kontakt" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Kontakt</Link>
                     </nav>
                     <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, "")}`}>

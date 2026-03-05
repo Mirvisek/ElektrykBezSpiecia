@@ -75,7 +75,7 @@ export default function RealizacjeClient({
                     <nav className="hidden md:flex gap-8">
                         <Link href="/#dlaczego-my" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Dlaczego My</Link>
                         <Link href="/#uslugi" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Usługi</Link>
-                        {(settings?.portfolioActive !== false) && <Link href="/realizacje" className="text-sm font-medium text-brand-orange border-b-2 border-brand-orange pb-0.5">Realizacje</Link>}
+                        <Link href="/realizacje" className="text-sm font-medium text-brand-orange border-b-2 border-brand-orange pb-0.5">Realizacje</Link>
                         {(settings?.blogActive !== false) && <Link href="/blog" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Blog</Link>}
                         <Link href="/kontakt" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Kontakt</Link>
                     </nav>
