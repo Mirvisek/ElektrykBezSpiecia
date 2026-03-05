@@ -54,9 +54,10 @@ export async function sendEmail(config: MailConfig, options: EmailOptions): Prom
         }
 
         return { success: false, error: "Brak konfiguracji email. Skonfiguruj SMTP lub Resend w panelu." };
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("Błąd wysyłania email:", err);
-        return { success: false, error: err?.message || "Nieznany błąd" };
+        const errorMessage = err instanceof Error ? err.message : "Nieznany błąd";
+        return { success: false, error: errorMessage };
     }
 }
 

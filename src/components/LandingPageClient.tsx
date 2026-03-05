@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     Zap,
     ShieldCheck,
@@ -16,12 +16,12 @@ import {
     Facebook,
     Clock
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import NewsletterForm from "@/components/NewsletterForm";
 
 // Helper mapowania ikon z bazy do komponentów
-const ICONS: Record<string, any> = {
+const ICONS: Record<string, LucideIcon> = {
     Zap,
     ShieldCheck,
     CheckCircle,
@@ -32,13 +32,24 @@ const ICONS: Record<string, any> = {
     Wrench,
 };
 
+import NewsletterForm from "@/components/NewsletterForm";
+import { SiteSetting, HeroSlide, Advantage, Service, Testimonial } from "@/types/prisma";
+
+import Image from "next/image";
+
 export default function LandingPageClient({
     settings,
     heroSlides,
     advantages,
     services,
     testimonials
-}: any) {
+}: {
+    settings: SiteSetting | null;
+    heroSlides: HeroSlide[];
+    advantages: Advantage[];
+    services: Service[];
+    testimonials: Testimonial[];
+}) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     // Prosty interwał do automatycznej zmiany slajdów (jeśli więcej niż 1)
@@ -53,54 +64,39 @@ export default function LandingPageClient({
     const slide = heroSlides[currentSlide] || heroSlides[0];
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#061125] text-brand-navy dark:text-slate-100 flex flex-col font-sans overflow-hidden">
-
-            {/* TOP BANNER */}
-            {settings?.topBannerActive && settings?.topBannerText && (
-                <div className="fixed top-0 left-0 w-full z-[60] bg-brand-orange text-white py-2 px-4 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md">
-                    <AlertTriangle className="w-4 h-4 shrink-0" />
-                    <span className="truncate max-w-4xl">{settings.topBannerText}</span>
-                </div>
-            )}
-
-            {/* HEADER / NAVBAR */}
-            <header className={`fixed ${settings?.topBannerActive && settings?.topBannerText ? "top-8 sm:top-9" : "top-0"} left-0 w-full z-50 bg-white/80 dark:bg-[#0A1C3B]/90 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800 transition-all`}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                    <Link href="/" className="flex items-center gap-2">
-                        {settings?.logoUrl ? (
-                            <img src={settings.logoUrl} alt="Logo" fetchPriority="high" className="max-h-12 sm:max-h-14 w-auto object-contain" />
-                        ) : (
-                            <>
-                                <Zap className="h-7 w-7 sm:h-8 sm:w-8 text-brand-orange fill-current" />
-                                <span className="text-lg sm:text-xl font-bold dark:text-white leading-tight block">
-                                    Elektryk<br />
-                                    <span className="text-[10px] sm:text-sm font-normal text-slate-500 dark:text-slate-400 leading-tight block -mt-1">Bez Spięcia</span>
-                                </span>
-                            </>
-                        )}
-                    </Link>
-                    <nav className="hidden md:flex gap-8">
-                        <Link href="/#dlaczego-my" className="text-sm font-medium hover:text-brand-orange transition-colors">Dlaczego My</Link>
-                        <Link href="/#uslugi" className="text-sm font-medium hover:text-brand-orange transition-colors">Usługi</Link>
-                        {(settings?.portfolioActive !== false) && <Link href="/realizacje" className="text-sm font-medium hover:text-brand-orange transition-colors">Realizacje</Link>}
-                        {(settings?.blogActive !== false) && <Link href="/blog" className="text-sm font-medium hover:text-brand-orange transition-colors">Blog</Link>}
-                        <Link href="/kontakt" className="text-sm font-medium hover:text-brand-orange transition-colors">Kontakt</Link>
-                    </nav>
-                    <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, '')}`}>
-                        <button className="bg-brand-orange hover:bg-brand-orange-dark text-white font-bold px-4 py-2 sm:px-5 sm:py-2 rounded-xl text-sm transition-all shadow-lg shadow-brand-orange/30 flex items-center gap-2">
-                            <PhoneCall className="w-4 h-4" />
-                            <span className="hidden sm:inline">{settings?.contactPhone}</span>
-                            <span className="sm:hidden">Zadzwoń</span>
-                        </button>
-                    </a>
-                </div>
-            </header>
+        <div className="flex flex-col font-sans overflow-hidden">
 
             {/* HERO SECTION */}
             <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-brand-navy text-white min-h-[80vh] flex items-center">
+                {/* Background Image with Transition */}
+                <AnimatePresence mode="wait">
+                    {slide?.imageUrl && (
+                        <motion.div
+                            key={slide.imageUrl}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.3 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 1 }}
+                            className="absolute inset-0 z-0"
+                        >
+                            <Image
+                                src={slide.imageUrl}
+                                alt=""
+                                fill
+                                priority
+                                className="object-cover"
+                            />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Overlay Gradients */}
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/80 to-transparent z-[1]" />
+                <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-transparent to-transparent z-[1]" />
+
                 {/* Dekoracyjne tło z piorunem */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-orange/20 rounded-full blur-[100px] pointer-events-none" />
-                <div className="absolute right-0 top-0 w-1/2 h-full opacity-10 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-orange/20 rounded-full blur-[100px] pointer-events-none z-[2]" />
+                <div className="absolute right-0 top-0 w-1/2 h-full opacity-10 pointer-events-none z-[2]">
                     <Zap className="w-full h-full text-brand-orange" />
                 </div>
 
@@ -137,7 +133,7 @@ export default function LandingPageClient({
                     {/* Indykatory Karuzeli */}
                     {heroSlides.length > 1 && (
                         <div className="absolute bottom-10 left-4 sm:left-6 lg:left-8 flex gap-2">
-                            {heroSlides.map((_: any, idx: number) => (
+                            {heroSlides.map((_: HeroSlide, idx: number) => (
                                 <button
                                     key={idx}
                                     onClick={() => setCurrentSlide(idx)}
@@ -157,7 +153,7 @@ export default function LandingPageClient({
                         <h3 className="text-3xl lg:text-4xl font-extrabold text-brand-navy dark:text-white">Dlaczego my?</h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {advantages.map((adv: any, index: number) => {
+                        {advantages.map((adv: Advantage, index: number) => {
                             const IconComp = ICONS[adv.icon] || Zap;
                             return (
                                 <motion.div
@@ -194,7 +190,7 @@ export default function LandingPageClient({
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {services.map((srv: any, index: number) => {
+                        {services.map((srv: Service, index: number) => {
                             const IconComp = ICONS[srv.icon] || Wrench;
                             return (
                                 <motion.div
@@ -224,7 +220,7 @@ export default function LandingPageClient({
                             <h3 className="text-3xl lg:text-4xl font-extrabold text-brand-navy dark:text-white">Co mówią o nas inni?</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {testimonials.map((tmn: any, index: number) => (
+                            {testimonials.map((tmn: Testimonial, index: number) => (
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -246,86 +242,6 @@ export default function LandingPageClient({
                     </div>
                 </section>
             )}
-
-            {/* CALL TO ACTION & FOOTER */}
-            <footer className="bg-brand-navy text-slate-300 py-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12 pb-12 border-b border-slate-700">
-                        <div className="lg:col-span-2">
-                            <Link href="/">
-                                <div className="flex items-center gap-2 mb-6">
-                                    {settings?.logoUrl ? (
-                                        <img src={settings.logoUrl} alt="Logo" loading="lazy" className="max-h-12 sm:max-h-14 w-auto object-contain brightness-0 invert" />
-                                    ) : (
-                                        <>
-                                            <Zap className="h-8 w-8 text-brand-orange fill-current" />
-                                            <span className="text-2xl font-bold text-white block leading-tight">
-                                                Elektryk<br />
-                                                <span className="text-sm font-normal text-slate-400 block -mt-1">Bez Spięcia</span>
-                                            </span>
-                                        </>
-                                    )}
-                                </div>
-                            </Link>
-                            <p className="max-w-sm">
-                                Skontaktuj się z nami w celu wyceny, darmowej konsultacji lub nagłej awarii. Jesteśmy do Twojej dyspozycji.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Kontakt</h4>
-                            <ul className="space-y-4">
-                                <li className="flex items-center gap-3">
-                                    <PhoneCall className="w-5 h-5 text-brand-orange" />
-                                    <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, '')}`} className="hover:text-white transition-colors">{settings?.contactPhone}</a>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <Mail className="w-5 h-5 text-brand-orange" />
-                                    <a href={`mailto:${settings?.contactMail}`} className="hover:text-white transition-colors">{settings?.contactMail}</a>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <MapPin className="w-5 h-5 text-brand-orange shrink-0" />
-                                    <span>{settings?.address}</span>
-                                </li>
-                                {settings?.workingHours && (
-                                    <li className="flex items-start gap-3 mt-4 pt-4 border-t border-slate-700/50">
-                                        <Clock className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" />
-                                        <span className="whitespace-pre-line text-sm">{settings.workingHours}</span>
-                                    </li>
-                                )}
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Social Media</h4>
-                            <ul className="space-y-4">
-                                {settings?.facebookUrl ? (
-                                    <li>
-                                        <a href={settings.facebookUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 hover:text-white transition-colors">
-                                            <Facebook className="w-5 h-5 text-brand-orange" />
-                                            Facebook
-                                        </a>
-                                    </li>
-                                ) : (
-                                    <li>
-                                        <span className="text-slate-500 italic">Brak linków</span>
-                                    </li>
-                                )}
-                            </ul>
-                        </div>
-
-                        <div className="lg:col-span-4">
-                            <NewsletterForm />
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col md:flex-row justify-center items-center gap-2 text-sm text-slate-500 text-center">
-                        <p>{settings?.footerText}</p>
-                        <span className="hidden md:inline">·</span>
-                        <Link href="/polityka-prywatnosci" className="hover:text-slate-300 underline underline-offset-4 transition-colors">Polityka Prywatności</Link>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }

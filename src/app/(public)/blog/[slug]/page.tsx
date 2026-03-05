@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Zap, Calendar, ArrowLeft, Clock, PhoneCall } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -37,44 +38,19 @@ export default async function BlogPostPage({ params }: Props) {
     const readingTime = Math.max(1, Math.ceil(post.content.split(" ").length / 200));
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#061125] font-sans">
-            {/* NAVBAR */}
-            <header className="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-[#0A1C3B]/90 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                    <Link href="/" className="flex items-center gap-2">
-                        {settings?.logoUrl ? (
-                            <img src={settings.logoUrl} alt="Logo" className="max-h-12 w-auto object-contain" />
-                        ) : (
-                            <>
-                                <Zap className="h-8 w-8 text-brand-orange fill-current" />
-                                <span className="text-xl font-bold dark:text-white">Elektryk<br />
-                                    <span className="text-sm font-normal text-slate-500 dark:text-slate-400 leading-tight block -mt-1">Bez Spięcia</span>
-                                </span>
-                            </>
-                        )}
-                    </Link>
-                    <nav className="hidden md:flex gap-8">
-                        <Link href="/#dlaczego-my" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Dlaczego My</Link>
-                        <Link href="/#uslugi" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Usługi</Link>
-                        {(settings?.portfolioActive !== false) && <Link href="/realizacje" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Realizacje</Link>}
-                        <Link href="/blog" className="text-sm font-medium text-brand-orange border-b-2 border-brand-orange pb-0.5">Blog</Link>
-                        <Link href="/kontakt" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Kontakt</Link>
-                    </nav>
-                    <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, "")}`}>
-                        <button className="bg-brand-orange hover:bg-brand-orange-dark text-white font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition-all shadow-lg shadow-brand-orange/30">
-                            <PhoneCall className="w-4 h-4" />
-                            <span className="hidden sm:inline">{settings?.contactPhone}</span>
-                            <span className="sm:hidden">Zadzwoń</span>
-                        </button>
-                    </a>
-                </div>
-            </header>
+        <div className="bg-slate-50 dark:bg-[#061125] font-sans">
 
             {/* HERO IMAGE */}
             <div className="pt-16">
                 {post.imageUrl ? (
-                    <div className="w-full aspect-[21/7] overflow-hidden">
-                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover" fetchPriority="high" />
+                    <div className="w-full aspect-[21/7] relative overflow-hidden">
+                        <Image
+                            src={post.imageUrl}
+                            alt={post.title}
+                            fill
+                            priority
+                            className="object-cover"
+                        />
                     </div>
                 ) : (
                     <div className="w-full h-48 bg-gradient-to-br from-brand-navy to-blue-900 flex items-center justify-center">
@@ -154,12 +130,6 @@ export default async function BlogPostPage({ params }: Props) {
                 }}
             />
 
-            {/* FOOTER */}
-            <footer className="bg-brand-navy text-slate-400 py-8 text-center text-sm mt-16">
-                <p>© {new Date().getFullYear()} {settings?.title} ·{" "}
-                    <Link href="/polityka-prywatnosci" className="underline hover:text-white">Polityka Prywatności</Link>
-                </p>
-            </footer>
         </div>
     );
 }

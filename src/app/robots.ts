@@ -1,17 +1,14 @@
-import { MetadataRoute } from "next";
+import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://elektrykbezspiecia.pl";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://elektrykbezspiecia.pl';
 
     return {
-        rules: [
-            {
-                userAgent: "*",
-                allow: "/",
-                disallow: ["/adminpanel/", "/api/", "/login/"],
-            },
-        ],
+        rules: {
+            userAgent: '*',
+            allow: '/',
+            disallow: ['/adminpanel/', '/strefa-kursantki/', '/api/'],
+        },
         sitemap: `${baseUrl}/sitemap.xml`,
-        host: baseUrl,
     };
 }

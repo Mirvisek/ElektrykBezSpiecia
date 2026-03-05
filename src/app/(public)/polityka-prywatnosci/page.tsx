@@ -7,36 +7,17 @@ export const metadata = {
     description: "Polityka prywatności i ochrony danych osobowych serwisu Elektryk Bez Spięcia.",
 };
 
+import { SiteSetting } from "@/types/prisma";
+
 export default async function PolitykaPrywatnosci() {
-    const settings = await prisma.siteSetting.findUnique({ where: { id: "global" } });
+    const settings = await prisma.siteSetting.findFirst({ where: { id: "global" } });
     const phone = settings?.contactPhone || "";
     const email = settings?.contactMail || "";
     const address = settings?.address || "";
     const siteName = settings?.title || "Elektryk Bez Spięcia";
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#061125] text-brand-navy dark:text-slate-100 font-sans">
-            {/* NAVBAR */}
-            <header className="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-[#0A1C3B]/90 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                    <Link href="/" className="flex items-center gap-2">
-                        {settings?.logoUrl ? (
-                            <img src={settings.logoUrl} alt="Logo" className="max-h-12 w-auto object-contain" />
-                        ) : (
-                            <>
-                                <Zap className="h-8 w-8 text-brand-orange fill-current" />
-                                <span className="text-xl font-bold dark:text-white">
-                                    Elektryk<br />
-                                    <span className="text-sm font-normal text-slate-500 dark:text-slate-400 leading-tight block -mt-1">Bez Spięcia</span>
-                                </span>
-                            </>
-                        )}
-                    </Link>
-                    <Link href="/" className="text-sm font-medium bg-brand-orange text-white px-4 py-2 rounded-xl hover:bg-brand-orange-dark transition-colors">
-                        ← Wróć na stronę główną
-                    </Link>
-                </div>
-            </header>
+        <div className="bg-slate-50 dark:bg-[#061125] text-brand-navy dark:text-slate-100 font-sans">
 
             {/* HERO */}
             <section className="pt-28 pb-12 bg-brand-navy text-white">
@@ -183,10 +164,6 @@ export default async function PolitykaPrywatnosci() {
                 </div>
             </main>
 
-            {/* FOOTER */}
-            <footer className="bg-brand-navy text-slate-400 py-8 text-center text-sm">
-                <p>© {new Date().getFullYear()} {siteName} · <Link href="/polityka-prywatnosci" className="underline hover:text-white">Polityka Prywatności</Link></p>
-            </footer>
         </div>
     );
 }

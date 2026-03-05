@@ -3,25 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Zap, PhoneCall, X, ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
+import Image from "next/image";
 
 const CATEGORIES_PL = ["Wszystkie"];
 
-interface PortfolioItem {
-    id: string;
-    title: string;
-    description?: string | null;
-    category?: string | null;
-    imageUrl?: string | null;
-    images: string[];
-    createdAt: Date;
-}
+import { SiteSetting, PortfolioItem } from "@/types/prisma";
 
 export default function RealizacjeClient({
     settings,
     portfolio,
     categories,
 }: {
-    settings: any;
+    settings: SiteSetting | null;
     portfolio: PortfolioItem[];
     categories: string[];
 }) {
@@ -55,39 +48,7 @@ export default function RealizacjeClient({
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#061125] font-sans">
-            {/* NAVBAR */}
-            <header className="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-[#0A1C3B]/90 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                    <Link href="/" className="flex items-center gap-2">
-                        {settings?.logoUrl ? (
-                            <img src={settings.logoUrl} alt="Logo" fetchPriority="high" className="max-h-12 w-auto object-contain" />
-                        ) : (
-                            <>
-                                <Zap className="h-8 w-8 text-brand-orange fill-current" />
-                                <span className="text-xl font-bold dark:text-white leading-tight">
-                                    Elektryk<br />
-                                    <span className="text-sm font-normal text-slate-500 dark:text-slate-400 block -mt-1">Bez Spięcia</span>
-                                </span>
-                            </>
-                        )}
-                    </Link>
-                    <nav className="hidden md:flex gap-8">
-                        <Link href="/#dlaczego-my" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Dlaczego My</Link>
-                        <Link href="/#uslugi" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Usługi</Link>
-                        <Link href="/realizacje" className="text-sm font-medium text-brand-orange border-b-2 border-brand-orange pb-0.5">Realizacje</Link>
-                        {(settings?.blogActive !== false) && <Link href="/blog" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Blog</Link>}
-                        <Link href="/kontakt" className="text-sm font-medium hover:text-brand-orange transition-colors dark:text-slate-200">Kontakt</Link>
-                    </nav>
-                    <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, "")}`}>
-                        <button className="bg-brand-orange hover:bg-brand-orange-dark text-white font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition-all shadow-lg shadow-brand-orange/30">
-                            <PhoneCall className="w-4 h-4" />
-                            <span className="hidden sm:inline">{settings?.contactPhone}</span>
-                            <span className="sm:hidden">Zadzwoń</span>
-                        </button>
-                    </a>
-                </div>
-            </header>
+        <div className="bg-slate-50 dark:bg-[#061125] font-sans">
 
             {/* HERO */}
             <section className="pt-28 pb-14 bg-brand-navy text-white">
@@ -143,15 +104,16 @@ export default function RealizacjeClient({
                                 >
                                     {/* Zdjęcie główne */}
                                     {item.imageUrl ? (
-                                        <div className="overflow-hidden relative">
-                                            <img
+                                        <div className="overflow-hidden relative aspect-video">
+                                            <Image
                                                 src={item.imageUrl}
                                                 alt={item.title}
-                                                className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                loading="lazy"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
                                             {allImgs.length > 1 && (
-                                                <span className="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">
+                                                <span className="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm z-10">
                                                     +{allImgs.length - 1} zdjęć
                                                 </span>
                                             )}
@@ -215,11 +177,15 @@ export default function RealizacjeClient({
                         </button>
 
                         {/* Zdjęcie */}
-                        <img
-                            src={lightboxImages[lightbox.imgIndex]}
-                            alt={lightbox.item.title}
-                            className="w-full max-h-[80vh] object-contain rounded-xl"
-                        />
+                        <div className="relative w-full h-[60vh] sm:h-[80vh]">
+                            <Image
+                                src={lightboxImages[lightbox.imgIndex]}
+                                alt={lightbox.item.title}
+                                fill
+                                className="object-contain rounded-xl"
+                                priority
+                            />
+                        </div>
 
                         {/* Nawigacja */}
                         {lightboxImages.length > 1 && (
@@ -253,12 +219,6 @@ export default function RealizacjeClient({
                 </div>
             )}
 
-            {/* FOOTER */}
-            <footer className="bg-brand-navy text-slate-400 py-8 text-center text-sm mt-8">
-                <p>© {new Date().getFullYear()} {settings?.title || "Elektryk Bez Spięcia"} ·{" "}
-                    <Link href="/polityka-prywatnosci" className="underline hover:text-white">Polityka Prywatności</Link>
-                </p>
-            </footer>
         </div>
     );
 }
