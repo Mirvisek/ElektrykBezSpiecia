@@ -91,13 +91,7 @@ export default function Navbar({ settings }: NavbarProps) {
                 </nav>
 
                 <div className="flex items-center gap-4">
-                    <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, '')}`}>
-                        <button className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 sm:px-5 sm:py-2 rounded-xl text-sm transition-all shadow-lg shadow-red-600/30 flex items-center gap-2 hover:scale-105 active:scale-95 animate-pulse">
-                            <AlertTriangle className="w-4 h-4" />
-                            <span className="hidden xl:inline">Pogotowie Elektryczne</span>
-                            <span className="hidden sm:inline xl:hidden">Awaria</span>
-                        </button>
-                    </a>
+
 
                     <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, '')}`} className="hidden lg:block">
                         <button className="bg-brand-orange hover:bg-brand-orange-dark text-white font-bold px-4 py-2 sm:px-5 sm:py-2 rounded-xl text-sm transition-all shadow-lg shadow-brand-orange/30 flex items-center gap-2 hover:scale-105 active:scale-95">
