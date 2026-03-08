@@ -5,6 +5,7 @@ import { Zap, PhoneCall, Mail, MapPin, Facebook, Clock } from "lucide-react";
 import NewsletterForm from "@/components/NewsletterForm";
 import { SiteSetting } from "@/types/prisma";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface FooterProps {
     settings: SiteSetting | null;
@@ -17,7 +18,13 @@ export default function Footer({ settings }: FooterProps) {
         <footer className="bg-brand-navy text-slate-300 py-16 mt-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12 pb-12 border-b border-slate-700">
-                    <div className="lg:col-span-2">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="lg:col-span-2"
+                    >
                         <Link href="/" className="inline-block group transition-all hover:scale-105">
                             <div className="flex items-center gap-2 mb-6">
                                 {settings?.logoUrl ? (
@@ -44,9 +51,14 @@ export default function Footer({ settings }: FooterProps) {
                             Specjalizujemy się w instalacjach elektrycznych, pomiarach i szybkim usuwaniu awarii.
                             Zaufaj profesjonalistom i zapomnij o problemach z prądem!
                         </p>
-                    </div>
+                    </motion.div>
 
-                    <div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                    >
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm border-l-4 border-brand-orange pl-3">Kontakt</h4>
                         <ul className="space-y-4">
                             <li className="flex items-center gap-3 group">
@@ -68,9 +80,14 @@ export default function Footer({ settings }: FooterProps) {
                                 </li>
                             )}
                         </ul>
-                    </div>
+                    </motion.div>
 
-                    <div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm border-l-4 border-brand-orange pl-3">Social Media</h4>
                         <ul className="space-y-4">
                             {settings?.facebookUrl ? (
@@ -93,11 +110,17 @@ export default function Footer({ settings }: FooterProps) {
                                 </li>
                             )}
                         </ul>
-                    </div>
+                    </motion.div>
 
-                    <div className="lg:col-span-4 mt-8 bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        className="lg:col-span-4 mt-8 bg-slate-800/50 p-6 rounded-2xl border border-slate-700"
+                    >
                         <NewsletterForm />
-                    </div>
+                    </motion.div>
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 mt-8">

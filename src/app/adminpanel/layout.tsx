@@ -13,6 +13,11 @@ export default async function AdminLayout({
         redirect("/login");
     }
 
+    // Redirect CLIENT role
+    if ((session.user as any).role === "CLIENT") {
+        redirect("/strefa-klienta");
+    }
+
     const mustChange = (session.user as any).mustChangePassword;
 
     return (

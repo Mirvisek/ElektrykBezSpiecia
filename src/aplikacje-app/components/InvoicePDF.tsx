@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 
 Font.register({
     family: 'Roboto',
@@ -38,7 +38,10 @@ export const InvoicePDF = ({ data, settings }: any) => {
         <Document>
             <Page size="A4" style={styles.page}>
                 <View style={styles.header}>
-                    <View>
+                    <View style={{ flex: 1 }}>
+                        {settings?.logoBase64 && (
+                            <Image src={settings.logoBase64} style={{ width: 120, marginBottom: 15, objectFit: 'contain' }} />
+                        )}
                         <Text style={styles.title}>Rachunek nr {data.docNumber}</Text>
                         <Text style={styles.text}>Data wystawienia: {data.issueDate}</Text>
                         <Text style={styles.text}>Data wykonania usługi: {data.execDate}</Text>

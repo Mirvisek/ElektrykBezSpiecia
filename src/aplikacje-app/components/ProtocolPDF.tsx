@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 
 Font.register({
     family: 'Roboto',
@@ -41,8 +41,13 @@ export default function ProtocolPDF({ protocol, settings }: { protocol: any, set
         <Document>
             <Page size="A4" style={styles.page}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>PROTOKÓŁ Z BADAŃ WYŁĄCZNIKÓW RÓŻNICOWOPRĄDOWYCH</Text>
-                    <Text style={styles.subtitle}>Wykaz pomiarów i ocena skuteczności działania wyłączników RCD</Text>
+                    <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        {settings?.logoBase64 && (
+                            <Image src={settings.logoBase64} style={{ width: 100, marginBottom: 15, objectFit: 'contain' }} />
+                        )}
+                        <Text style={styles.title}>PROTOKÓŁ Z BADAŃ WYŁĄCZNIKÓW RÓŻNICOWOPRĄDOWYCH</Text>
+                        <Text style={styles.subtitle}>Wykaz pomiarów i ocena skuteczności działania wyłączników RCD</Text>
+                    </View>
                 </View>
 
                 <View style={styles.section}>

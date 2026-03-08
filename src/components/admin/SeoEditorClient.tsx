@@ -222,13 +222,17 @@ export default function SeoEditorClient({ initialSettings, initialHeroSlides, in
                                         <LayoutTemplate className="w-4 h-4 text-brand-orange" />
                                         Widoczność sekcji w menu
                                     </h4>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         <label className="flex items-center justify-between p-4 bg-white dark:bg-[#0A1C3B] rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-brand-orange transition-colors">
-                                            <span className="font-bold text-sm dark:text-white">Sekcja Realizacje</span>
+                                            <span className="font-bold text-sm dark:text-white">O nas</span>
+                                            <input type="checkbox" checked={settings.aboutUsActive ?? true} onChange={(e) => setSettings({ ...settings, aboutUsActive: e.target.checked })} className="w-5 h-5 accent-brand-orange cursor-pointer" />
+                                        </label>
+                                        <label className="flex items-center justify-between p-4 bg-white dark:bg-[#0A1C3B] rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-brand-orange transition-colors">
+                                            <span className="font-bold text-sm dark:text-white">Realizacje</span>
                                             <input type="checkbox" checked={settings.portfolioActive ?? true} onChange={(e) => setSettings({ ...settings, portfolioActive: e.target.checked })} className="w-5 h-5 accent-brand-orange cursor-pointer" />
                                         </label>
                                         <label className="flex items-center justify-between p-4 bg-white dark:bg-[#0A1C3B] rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-brand-orange transition-colors">
-                                            <span className="font-bold text-sm dark:text-white">Sekcja Blog</span>
+                                            <span className="font-bold text-sm dark:text-white">Blog</span>
                                             <input type="checkbox" checked={settings.blogActive ?? true} onChange={(e) => setSettings({ ...settings, blogActive: e.target.checked })} className="w-5 h-5 accent-brand-orange cursor-pointer" />
                                         </label>
                                     </div>

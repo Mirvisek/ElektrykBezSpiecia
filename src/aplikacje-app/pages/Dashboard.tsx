@@ -90,6 +90,7 @@ export default function Dashboard() {
     ];
 
     const expiringEquipment = equipment?.filter(eq => {
+        if (!eq.calibrationDate) return false;
         const today = new Date();
         const target = new Date(eq.calibrationDate);
         const df = target.getTime() - today.getTime();
@@ -112,11 +113,11 @@ export default function Dashboard() {
             {expiringEquipment.length > 0 && (
                 <div style={{ marginTop: '24px', background: '#fee2e2', borderLeft: '4px solid var(--danger-color)', padding: '16px', borderRadius: '4px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {expiringEquipment.map(eq => {
-                        const daysLeft = Math.ceil((new Date(eq.calibrationDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+                        const daysLeft = eq.calibrationDate ? Math.ceil((new Date(eq.calibrationDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24)) : null;
                         return (
                             <div key={eq.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#991b1b', fontWeight: 'bold' }}>
                                 <AlertCircle size={20} />
-                                <span>UWAGA! {daysLeft <= 0 ? 'Upłynął' : `Za ${daysLeft} dni kończy się`} termin wzorcowania miernika: {eq.model} (SN: {eq.serialNumber})</span>
+                                <span>UWAGA! {daysLeft !== null && daysLeft <= 0 ? 'Upłynął' : `Za ${daysLeft} dni kończy się`} termin wzorcowania miernika: {eq.model} {eq.serialNumber ? `(SN: ${eq.serialNumber})` : ''}</span>
                             </div>
                         );
                     })}

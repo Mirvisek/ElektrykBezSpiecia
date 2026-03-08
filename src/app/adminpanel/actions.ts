@@ -227,3 +227,25 @@ export async function testEmailConnection(toEmail: string) {
 
     return res;
 }
+
+// === DICTIONARY ===
+export async function addDictionaryTerm(data: any) {
+    await (prisma as any).dictionaryTerm.create({ data });
+    revalidatePath("/adminpanel/dictionary");
+    revalidatePath("/slowniczek");
+}
+
+export async function updateDictionaryTerm(id: string, data: any) {
+    await (prisma as any).dictionaryTerm.update({
+        where: { id },
+        data
+    });
+    revalidatePath("/adminpanel/dictionary");
+    revalidatePath("/slowniczek");
+}
+
+export async function deleteDictionaryTerm(id: string) {
+    await (prisma as any).dictionaryTerm.delete({ where: { id } });
+    revalidatePath("/adminpanel/dictionary");
+    revalidatePath("/slowniczek");
+}

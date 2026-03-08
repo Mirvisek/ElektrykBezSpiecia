@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 
 Font.register({
     family: 'Roboto',
@@ -35,7 +35,10 @@ export default function QuotePDF({ quote, settings }: { quote: any, settings: an
         <Document>
             <Page size="A4" style={styles.page}>
                 <View style={styles.header}>
-                    <View>
+                    <View style={{ flex: 1 }}>
+                        {settings?.logoBase64 && (
+                            <Image src={settings.logoBase64} style={{ width: 120, marginBottom: 15, objectFit: 'contain' }} />
+                        )}
                         <Text style={styles.title}>OFERTA / KOSZTORYS</Text>
                         <Text style={styles.infoText}>Nr dokumentu: {quote.documentNumber}</Text>
                         <Text style={styles.infoText}>Data wystawienia: {quote.date}</Text>

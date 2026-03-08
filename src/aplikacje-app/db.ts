@@ -76,13 +76,15 @@ export interface Setting {
   bankAccount: string;
   quarterlyLimit: number;
   exemptionBasis: string;
+  logoBase64?: string;
 }
 
 export interface Equipment {
   id?: number;
   model: string;
-  serialNumber: string;
-  calibrationDate: string; // YYYY-MM-DD
+  serialNumber?: string;
+  calibrationDate?: string; // YYYY-MM-DD
+  barcodeNumber?: string;
 }
 
 export interface KnowledgeItem {
@@ -143,6 +145,25 @@ export interface MileageLog {
   totalCost: number;
 }
 
+export interface ProjectLog {
+  id?: number;
+  clientId: number;
+  date: string; // YYYY-MM-DD
+  description: string;
+  stage: string;
+  photos: string[]; // array of base64
+}
+
+export interface CircuitDefinition {
+  id?: number;
+  clientId: number;
+  symbol: string; // e.g., F1, Q1
+  name: string;   // e.g., Ośw. Salon
+  type: string;   // e.g., RCD, MCB
+  rating: string; // e.g., 16A / B
+  cable: string;  // e.g., 3x2.5
+}
+
 export class AppDatabase extends Dexie {
   sales!: Table<Sale>;
   clients!: Table<Client>;
@@ -157,6 +178,8 @@ export class AppDatabase extends Dexie {
   quotes!: Table<Quote>;
   tasks!: Table<KanbanTask>;
   mileage!: Table<MileageLog>;
+  projectLogs!: Table<ProjectLog>;
+  circuits!: Table<CircuitDefinition>;
 
   constructor() {
     super('DzialalnoscDb');
@@ -188,6 +211,22 @@ export class AppDatabase extends Dexie {
       quotes: '++id, date, documentNumber, clientName',
       tasks: '++id, status',
       mileage: '++id, date, clientName'
+    });
+
+    this.version(5).stores({
+      projectLogs: '++id, clientId, date',
+      circuits: '++id, clientId, symbol'
+    });
+
+    this.version(6).stores({
+      equipment: '++id, model, calibrationDate, barcodeNumber'
+    }).upgrade(tx => {
+      // Przypisz kody kreskowe dla istniejącego sprzętu, jeśli nie mają
+      tx.table('equipment').toCollection().modify(eq => {
+        if (!eq.barcodeNumber) {
+          eq.barcodeNumber = 'EBS-' + Math.floor(100000 + Math.random() * 900000).toString();
+        }
+      });
     });
   }
 }

@@ -18,6 +18,8 @@ import Mileage from './pages/Mileage';
 import ProtocolGenerator from './pages/ProtocolGenerator';
 import Quotes from './pages/Quotes';
 import Calculators from './pages/Calculators';
+import ConstructionLog from './pages/ConstructionLog';
+import CircuitBuilder from './pages/CircuitBuilder';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -58,6 +60,14 @@ function Layout({ children }: { children: React.ReactNode }) {
         <NavLink to="/protocols" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
           <FileSignature size={20} />
           <span>Protokoły (Pomiary)</span>
+        </NavLink>
+        <NavLink to="/construction-log" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <BookOpen size={20} />
+          <span>Dziennik Budowy</span>
+        </NavLink>
+        <NavLink to="/circuit-builder" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <Package size={20} />
+          <span>Opisy Rozdzielnic</span>
         </NavLink>
 
         <div style={{ margin: '8px 0', borderTop: '1px solid rgba(255,255,255,0.1)' }}></div>
@@ -132,6 +142,8 @@ function App() {
           <Route path="/protocols" element={<ProtocolGenerator />} />
           <Route path="/quotes" element={<Quotes />} />
           <Route path="/calculators" element={<Calculators />} />
+          <Route path="/construction-log" element={<ConstructionLog />} />
+          <Route path="/circuit-builder" element={<CircuitBuilder />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </Layout>

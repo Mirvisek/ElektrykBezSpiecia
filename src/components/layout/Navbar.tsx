@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Zap, PhoneCall, Menu, X } from "lucide-react";
+import { Zap, PhoneCall, Menu, X, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { SiteSetting } from "@/types/prisma";
@@ -28,10 +28,13 @@ export default function Navbar({ settings }: NavbarProps) {
     }, []);
 
     const navLinks = [
+        ...(settings?.aboutUsActive !== false ? [{ name: "O nas", href: "/o-nas" }] : []),
         { name: "Dlaczego My", href: "/#dlaczego-my" },
         { name: "Usługi", href: "/#uslugi" },
         ...(settings?.portfolioActive !== false ? [{ name: "Realizacje", href: "/realizacje" }] : []),
         ...(settings?.blogActive !== false ? [{ name: "Blog", href: "/blog" }] : []),
+        ...(settings?.dictionaryActive !== false ? [{ name: "Słowniczek", href: "/slowniczek" }] : []),
+        ...(settings?.clientZoneActive !== false ? [{ name: "Strefa Klienta", href: "/strefa-klienta" }] : []),
         { name: "Kontakt", href: "/kontakt" },
     ];
 
@@ -89,6 +92,14 @@ export default function Navbar({ settings }: NavbarProps) {
 
                 <div className="flex items-center gap-4">
                     <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, '')}`}>
+                        <button className="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 sm:px-5 sm:py-2 rounded-xl text-sm transition-all shadow-lg shadow-red-600/30 flex items-center gap-2 hover:scale-105 active:scale-95 animate-pulse">
+                            <AlertTriangle className="w-4 h-4" />
+                            <span className="hidden xl:inline">Pogotowie Elektryczne</span>
+                            <span className="hidden sm:inline xl:hidden">Awaria</span>
+                        </button>
+                    </a>
+
+                    <a href={`tel:${settings?.contactPhone?.replace(/\s+/g, '')}`} className="hidden lg:block">
                         <button className="bg-brand-orange hover:bg-brand-orange-dark text-white font-bold px-4 py-2 sm:px-5 sm:py-2 rounded-xl text-sm transition-all shadow-lg shadow-brand-orange/30 flex items-center gap-2 hover:scale-105 active:scale-95">
                             <PhoneCall className="w-4 h-4" />
                             <span className="hidden sm:inline">{settings?.contactPhone}</span>

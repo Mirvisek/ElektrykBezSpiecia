@@ -21,6 +21,7 @@ model User {
   resetTokenExpiry   DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+  clientFiles        ClientFile[]
 }
 
 // Globalne ustawienia strony - SEO, teksty, loga
@@ -60,6 +61,9 @@ model SiteSetting {
   notificationEmail String? // Gdzie wysyłać powiadomienia o zgłoszeniach
   blogActive       Boolean @default(true)
   portfolioActive  Boolean @default(true)
+  aboutUsActive    Boolean @default(true)
+  dictionaryActive Boolean @default(true)
+  clientZoneActive Boolean @default(true)
   updatedAt     DateTime @updatedAt
 }
 
@@ -142,4 +146,21 @@ model PortfolioItem {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ClientFile {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
+model DictionaryTerm {
+  id          String   @id @default(cuid())
+  term        String   @unique
+  explanation String
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
 }

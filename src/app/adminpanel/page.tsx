@@ -112,6 +112,20 @@ export default async function AdminPanelPage() {
                         </Link>
                     </div>
 
+                    {/* Słowniczek (Dictionary) */}
+                    <div className="bg-white dark:bg-[#0A1C3B] p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 hover:border-brand-orange/50 transition-colors">
+                        <FileText className="w-8 h-8 text-brand-orange mb-4" />
+                        <h3 className="text-xl font-bold dark:text-white mb-2">Słowniczek</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 min-h-[40px]">
+                            Wyjaśniaj trudne pojęcia i buduj świetne pozycjonowanie SEO strony.
+                        </p>
+                        <Link href="/adminpanel/dictionary">
+                            <button className="w-full bg-brand-navy dark:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-orange transition-colors">
+                                Słowniczek Elektryczny
+                            </button>
+                        </Link>
+                    </div>
+
                     {/* Zarządzanie Użytkownikami */}
                     <div className="bg-white dark:bg-[#0A1C3B] p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800 hover:border-brand-orange/50 transition-colors">
                         <Users className="w-8 h-8 text-brand-orange mb-4" />

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Users, AlertTriangle, AlertCircle, Search, Plus, X, Phone, Mail, MapPin, Map, Calendar as CalendarIcon, FileText, Camera, CheckCircle, Edit, Trash2 } from 'lucide-react';
+import { Users, AlertTriangle, AlertCircle, Search, Plus, X, Phone, Mail, MapPin, Map, Calendar as CalendarIcon, FileText, Camera, CheckCircle, Edit, Trash2, UploadCloud } from 'lucide-react';
 import { format, differenceInDays, addYears, addMonths } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -31,6 +31,42 @@ export default function Clients() {
 
     // Active selected client reference
     const selectedClient = clients?.find(c => c.id === selectedClientId);
+
+    // Share to ClientZone
+    const [isSharing, setIsSharing] = useState(false);
+    const [shareFile, setShareFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const handleShare = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!shareFile) return alert("Wybierz plik z dysku.");
+        if (!selectedClient?.email) return alert("Klient nie ma uzupełnionego adresu e-mail. Przejdź do edycji klienta i dopisz email, aby utworzyć mu konto w Strefie Klienta.");
+
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('file', shareFile);
+        formData.append('email', selectedClient.email);
+        formData.append('name', selectedClient.name);
+
+        try {
+            const res = await fetch('/api/client-files/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert("Plik udostępniony w Strefie Klienta. Jeśli klient nie miał tam konta, właśnie otrzymał powitalnego maila z hasłem.");
+                setIsSharing(false);
+                setShareFile(null);
+            } else {
+                alert("Błąd: " + data.message);
+            }
+        } catch (error) {
+            alert("Błąd połączenia z serwerem.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
     const enrichClientsWithStatus = useMemo(() => {
         if (!clients) return [];
@@ -520,6 +556,9 @@ export default function Clients() {
                                 <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{selectedClient.address}</div>
                             </div>
                             <div style={{ display: 'flex', gap: '8px' }}>
+                                <button className="btn btn-outline" title="Strefa Klienta (Udostępnij plik do chmury)" onClick={() => setIsSharing(true)} style={{ padding: '8px', color: '#10b981', borderColor: '#10b981' }}>
+                                    <UploadCloud size={20} />
+                                </button>
                                 <button className="btn btn-outline" title="Edytuj dane podstawowe" onClick={() => openEditModal(selectedClient)} style={{ padding: '8px', color: 'var(--primary-color)' }}>
                                     <Edit size={20} />
                                 </button>
@@ -1158,6 +1197,35 @@ export default function Clients() {
                     </div>
                 )
             }
+
+            {/* Modal Udostępniania do Chmury (Strefa Klienta) */}
+            {isSharing && selectedClient && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className="glass-panel" style={{ width: '100%', maxWidth: '450px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
+                            <h2 style={{ fontSize: '1.25rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <UploadCloud size={24} /> Udostępnij dokument
+                            </h2>
+                            <button onClick={() => { setIsSharing(false); setShareFile(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={20} /></button>
+                        </div>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
+                            Twoja aplikacja u mnie wygeneruje bezpieczne konto typu "<b>CLIENT</b>" i wyśle hasło do użytkownika automatycznie jeśli tego dotychczas nie zrobiono.<br /><br />
+                            Zostanie przypisane do adresu email: <b>{selectedClient.email || <span style={{ color: 'red' }}>BRAK E-MAIL (wymagane uzupełnienie)</span>}</b>
+                        </p>
+
+                        <form onSubmit={handleShare}>
+                            <div className="form-group">
+                                <label>Wybierz plik (PDF, JPG... z Protokołem lub Ofertą)</label>
+                                <input type="file" required onChange={e => setShareFile(e.target.files ? e.target.files[0] : null)} style={{ padding: '16px', border: '2px dashed var(--surface-border)', width: '100%', borderRadius: '8px' }} />
+                                {shareFile && <div style={{ marginTop: '8px', fontSize: '0.85rem', color: 'var(--text-main)', background: '#f3f4f6', padding: '8px', borderRadius: '6px' }}>Pamiętaj: Plik zostanie wrzucony do Bezpiecznej Strefy Klienta od razu.</div>}
+                            </div>
+                            <button type="submit" disabled={isUploading || !selectedClient.email} className="btn btn-primary" style={{ width: '100%', marginTop: '16px', background: isUploading ? 'grey' : '#10b981', borderColor: isUploading ? 'grey' : '#10b981' }}>
+                                {isUploading ? 'Wgrywam i wysyłam...' : 'Wyślij Dokument do Klienta'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div >
     );
 }

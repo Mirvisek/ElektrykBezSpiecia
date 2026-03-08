@@ -13,6 +13,7 @@ export default function Settings() {
     const [bankAccount, setBankAccount] = useState('');
     const [limit, setLimit] = useState('');
     const [exemption, setExemption] = useState('');
+    const [logoBase64, setLogoBase64] = useState<string>('');
 
     useEffect(() => {
         if (settings) {
@@ -21,6 +22,7 @@ export default function Settings() {
             setBankAccount(settings.bankAccount || '');
             setLimit(settings.quarterlyLimit.toString());
             setExemption(settings.exemptionBasis);
+            if (settings.logoBase64) setLogoBase64(settings.logoBase64);
         }
     }, [settings]);
 
@@ -32,7 +34,8 @@ export default function Settings() {
             myAddress,
             bankAccount,
             quarterlyLimit: parseFloat(limit),
-            exemptionBasis: exemption
+            exemptionBasis: exemption,
+            logoBase64
         });
         alert('Zapisano ustawienia.');
     };
@@ -56,6 +59,25 @@ export default function Settings() {
                             <label>Twój Adres (Kod, Miasto, Ulica)</label>
                             <textarea value={myAddress} onChange={e => setMyAddress(e.target.value)} rows={3} required />
                         </div>
+                        <div className="form-group" style={{ marginBottom: '24px' }}>
+                            <label>Logo firmy na dokumentach (Wgraj PNG lub JPG)</label>
+                            <input type="file" accept="image/png, image/jpeg" onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                const reader = new FileReader();
+                                reader.onload = (event) => {
+                                    setLogoBase64(event.target?.result as string);
+                                };
+                                reader.readAsDataURL(file);
+                            }} style={{ display: 'block', width: '100%', padding: '12px', border: '1px dashed var(--surface-border)', borderRadius: '8px', cursor: 'pointer' }} />
+                            {logoBase64 && (
+                                <div style={{ marginTop: '12px', border: '1px solid var(--surface-border)', padding: '12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '16px', background: '#f8fafc' }}>
+                                    <img src={logoBase64} alt="Logo" style={{ maxHeight: '60px', maxWidth: '150px', objectFit: 'contain' }} />
+                                    <button type="button" onClick={() => setLogoBase64('')} className="btn btn-outline" style={{ padding: '6px 12px', color: 'var(--danger-color)' }}>Usuń Logo</button>
+                                </div>
+                            )}
+                        </div>
+
                         <div className="form-group">
                             <label>Numer Konta Bankowego</label>
                             <input type="text" value={bankAccount} onChange={e => setBankAccount(e.target.value)} placeholder="00 0000 0000 0000 0000 0000 0000" />
